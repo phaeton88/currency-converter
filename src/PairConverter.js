@@ -7,27 +7,47 @@ export class PairConverter extends React.Component {
     this.state = {
       currency1: 'EUR',
       currency2: 'USD',
-      rate: 0,
+      rate: '',
       amount1: '',
       amount2: '',
     };
     this.handleCurrency1Change = this.handleCurrency1Change.bind(this);
     this.handleCurrency2Change = this.handleCurrency2Change.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAmount1Change = this.handleAmount1Change.bind(this);
     this.handleAmount2Change = this.handleAmount2Change.bind(this);
   };
+
+  getRates () {
+    let { currency1, currency2 } = this.state;
+    console.log(currency1, currency2);
+    fetch(`https://alt-exchange-rate.herokuapp.com/latest?base=${currency1}&symbols=${currency2}`)
+      .then(checkStatus)
+      .then(json)
+      .then((response) => {
+        console.log(response.rates);
+        var keys = Object.keys( response.rates );
+        var key = keys[0];
+        var value = response.rates[key];
+        console.log(value);
+        this.setState({rate: value});
+        this.setState({amount1: '', amount2: ''})
+      })
+      .catch(error => {
+        console.error(error.message);
+      })
+  }
+
   handleCurrency1Change(event) {
     const { name, value } = event.target;
     this.setState({
-      [name]: value
-    });
-  }
+      [name]: value,
+    }, this.getRates);
+}
   handleCurrency2Change(event) {
     const { name, value } = event.target;
     this.setState({
-      [name]: value
-    });
+      [name]: value,
+    },this.getRates);
   }
   toCurrency1(amount, rate) {
     return amount * (1 / rate);
@@ -61,32 +81,17 @@ export class PairConverter extends React.Component {
   }
   }
 
-    handleSubmit(event) {
-      event.preventDefault();
-      let { currency1, currency2 } = this.state;
-      fetch(`https://alt-exchange-rate.herokuapp.com/latest?base=${currency1}&symbols=${currency2}`)
-        .then(checkStatus)
-        .then(json)
-        .then((response) => {
-          console.log(response.rates);
-          var keys = Object.keys( response.rates );
-          var key = keys[0];
-          var value = response.rates[key];
-          console.log(value);
-          this.setState({rate: value});
-          this.setState({amount1: '', amount2: ''})
-        })
-        .catch(error => {
-          console.error(error.message);
-        })
-    }
+  componentDidMount () {
+    this.getRates();
+  }
+
 
   render () {
     const { currency1, currency2, base, rate, amount1, amount2 } = this.state;
     console.log(currency1);
     console.log(currency2);
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form>
        <div className="d-block d-lg-inline">
         <input className="mx-1" value={amount1} onChange={this.handleAmount1Change} type="number" placeholder="amount" />
           <select name="currency1" value={currency1} onChange={this.handleCurrency1Change}>
@@ -161,7 +166,6 @@ export class PairConverter extends React.Component {
             <option value="TRY">TRY</option>
             <option value="ZAR">ZAR</option>
            </select>
-        <button type="submit" className="btn btn-primary mx-2 d-block d-lg-inline">Go</button>
       </form>
     )
   }
