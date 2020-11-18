@@ -87,7 +87,8 @@ export class PairConverter extends React.Component {
     console.log(currency2);
     return (
       <form onSubmit={this.handleSubmit}>
-        <input value={amount1} onChange={this.handleAmount1Change} type="number" placeholder="amount" />
+       <div className="d-block d-lg-inline">
+        <input className="mx-1" value={amount1} onChange={this.handleAmount1Change} type="number" placeholder="amount" />
           <select name="currency1" value={currency1} onChange={this.handleCurrency1Change}>
             <option value="EUR">EUR</option>
             <option value="USD">USD</option>
@@ -123,7 +124,8 @@ export class PairConverter extends React.Component {
             <option value="TRY">TRY</option>
             <option value="ZAR">ZAR</option>
            </select>
-        <input value={amount2} onChange={this.handleAmount2Change} type="number" placeholder="amount" />
+          </div>
+        <input className="mx-1" value={amount2} onChange={this.handleAmount2Change} type="number" placeholder="amount" />
           <select name="currency2" value={currency2} onChange={this.handleCurrency2Change}>
             <option value="EUR">EUR</option>
             <option value="USD">USD</option>
@@ -159,7 +161,7 @@ export class PairConverter extends React.Component {
             <option value="TRY">TRY</option>
             <option value="ZAR">ZAR</option>
            </select>
-        <button type="submit" className="btn btn-primary">Go</button>
+        <button type="submit" className="btn btn-primary mx-2 d-block d-lg-inline">Go</button>
       </form>
     )
   }

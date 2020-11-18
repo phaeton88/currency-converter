@@ -45,7 +45,7 @@ class BaseConverter extends React.Component {
           <form onSubmit={this.handleSubmit}>
             <label>
               Choose base currency
-              <select name="currencyInput" value={currencyInput} onChange={this.handleChange}>
+              <select name="currencyInput" className="mx-1" value={currencyInput} onChange={this.handleChange}>
                 <option value="EUR">EUR</option>
                 <option value="USD">USD</option>
                 <option value="AUD">AUD</option>
@@ -81,7 +81,7 @@ class BaseConverter extends React.Component {
                 <option value="ZAR">ZAR</option>
                </select>
             </label>
-            <button type="submit" className="btn btn-primary">Go</button>
+            <button type="submit" className="btn btn-primary mx-2">Go</button>
           </form>
           <h4>Base Currency: {base}</h4>
           {Object.keys(rates).map( (rate, index)=> {
