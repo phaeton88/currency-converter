@@ -22,14 +22,18 @@ function App() {
           </div>
         </div>
       </nav>
+      <div className="container-fluid main-area">
+      <div className="row justify-content-center">
       <Switch>
         <Route path="/" exact component={BaseConverter} />
         <Route path="/convert/" component={PairConverter} />
         <Route component={NotFound} />
       </Switch>
-      <div className="container-fluid">
+      </div>
+      </div>
+      <div className="container-fluid mt-4 pt-4 ftr">
       <div className="row justify-content-between">
-        <small className="copy pt-2 ml-1">2020 Alexander Kostritsa</small><div className="icons pt-2 pb-5"><a href="https://www.facebook.com/alexander.kostritsa.75/" target="blank"><i className="pl-4 fab fa-facebook-f"></i></a><a href="https://www.instagram.com/alex.veloce/" target="blank"><i className=" pl-3 mr-1 fab fa-instagram"></i></a></div>
+        <small className="copy pt-2 ml-4">2020 Alexander Kostritsa</small><div className="icons pt-2 pb-5"><a href="https://www.facebook.com/alexander.kostritsa.75/" target="blank"><i className="pl-4 fab fa-facebook-f"></i></a><a href="https://www.instagram.com/alex.veloce/" target="blank"><i className=" pl-3 mr-4 fab fa-instagram"></i></a></div>
       </div>
     </div>
     </Router>

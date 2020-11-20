@@ -1,5 +1,6 @@
 import React from 'react';
 import { json, checkStatus } from './utils';
+import './BaseConverter.css'
 
 class BaseConverter extends React.Component {
   constructor (props) {
@@ -84,7 +85,7 @@ class BaseConverter extends React.Component {
             <button type="submit" className="btn btn-primary mx-2">Go</button>
           </form>
           <h4>Base Currency: {base}</h4>
-          {Object.keys(rates).map( (rate, index)=> {
+          {Object.keys(rates).filter(acronym => acronym !== base).map( (rate, index)=> {
               return <div key = {index}>
                  <span>{rate}:</span>
                  <span>{rates[rate].toFixed(2)}</span>

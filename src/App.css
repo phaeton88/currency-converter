@@ -36,3 +36,29 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  font-family: Helvetica, sans-serif;
+  color: #333;
+  font-weight: 250;
+}
+
+nav {
+  background-color: #eee;
+  border-bottom: solid 1px #ccc;
+}
+
+.main-area {
+  margin-top: 50px;
+}
+
+Link,
+a {
+  color: #00008b;
+}
+
+Link:hover,
+a:hover {
+  color: #0000d8;
+  text-decoration: none;
+}

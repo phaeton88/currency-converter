@@ -1,5 +1,6 @@
 import React from 'react';
 import { json, checkStatus } from './utils';
+import Chart from 'chart.js'
 
 export class PairConverter extends React.Component {
   constructor (props) {
@@ -15,6 +16,7 @@ export class PairConverter extends React.Component {
     this.handleCurrency2Change = this.handleCurrency2Change.bind(this);
     this.handleAmount1Change = this.handleAmount1Change.bind(this);
     this.handleAmount2Change = this.handleAmount2Change.bind(this);
+    this.chartRef = React.createRef();
   };
 
   getRates () {
@@ -37,17 +39,69 @@ export class PairConverter extends React.Component {
       })
   }
 
+
+  getHistoricalRates = (currency1, currency2) => {
+      const endDate = new Date().toISOString().split('T')[0];
+      const startDate = new Date((new Date).getTime() - (30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0];
+
+      fetch(`https://alt-exchange-rate.herokuapp.com/history?start_at=${startDate}&end_at=${endDate}&base=${currency1}&symbols=${currency2}`)
+        .then(checkStatus)
+        .then(json)
+        .then(data => {
+          if (data.error) {
+            throw new Error(data.error);
+          }
+
+          const chartLabels = Object.keys(data.rates);
+          const chartData = Object.values(data.rates).map(rate => rate[currency2]);
+          const chartLabel = `${currency1}/${currency2}`;
+          this.buildChart(chartLabels, chartData, chartLabel);
+        })
+        .catch(error => console.error(error.message));
+    }
+
+    buildChart = (labels, data, label) => {
+      const chartRef = this.chartRef.current.getContext("2d");
+
+      if (typeof this.chart !== "undefined") {
+        this.chart.destroy();
+      }
+
+      this.chart = new Chart(this.chartRef.current.getContext("2d"), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: label,
+              data,
+              fill: false,
+              tension: 0,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+        }
+      })
+    }
+
+
+
+
   handleCurrency1Change(event) {
     const { name, value } = event.target;
     this.setState({
       [name]: value,
-    }, this.getRates);
+    }, this.getRates,
+  this.getHistoricalRates(event.target.value, this.state.currency2),);
 }
   handleCurrency2Change(event) {
     const { name, value } = event.target;
     this.setState({
       [name]: value,
-    },this.getRates);
+    },this.getRates,
+  this.getHistoricalRates(this.state.currency1, event.target.value),);
   }
   toCurrency1(amount, rate) {
     return amount * (1 / rate);
@@ -82,7 +136,9 @@ export class PairConverter extends React.Component {
   }
 
   componentDidMount () {
+    const { currency1, currency2 } = this.state;
     this.getRates();
+    this.getHistoricalRates(currency1, currency2);
   }
 
 
@@ -91,7 +147,8 @@ export class PairConverter extends React.Component {
     console.log(currency1);
     console.log(currency2);
     return (
-      <form>
+      <React.Fragment>
+      <form className="mb-4">
        <div className="d-block d-lg-inline">
         <input className="mx-1" value={amount1} onChange={this.handleAmount1Change} type="number" placeholder="amount" />
           <select name="currency1" value={currency1} onChange={this.handleCurrency1Change}>
@@ -167,6 +224,8 @@ export class PairConverter extends React.Component {
             <option value="ZAR">ZAR</option>
            </select>
       </form>
+      <canvas ref={this.chartRef} />
+      </React.Fragment>
     )
   }
 }
