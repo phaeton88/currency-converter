@@ -24,7 +24,7 @@ class BaseConverter extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     let { currencyInput } = this.state;
-    fetch(`https://alt-exchange-rate.herokuapp.com/latest?base=${currencyInput}`)
+    fetch(`https://api.exchangeratesapi.io/latest?base=${currencyInput}`)
       .then(checkStatus)
       .then(json)
       .then((response) => {

@@ -22,7 +22,7 @@ export class PairConverter extends React.Component {
   getRates () {
     let { currency1, currency2 } = this.state;
     console.log(currency1, currency2);
-    fetch(`https://alt-exchange-rate.herokuapp.com/latest?base=${currency1}&symbols=${currency2}`)
+    fetch(`https://api.exchangeratesapi.io/latest?base=${currency1}&symbols=${currency2}`)
       .then(checkStatus)
       .then(json)
       .then((response) => {
